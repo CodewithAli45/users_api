@@ -1,4 +1,4 @@
-const http = require('https');
+const http = require('http');
 const app = require('./config/app');
 
 const port = process.env.PORT;
