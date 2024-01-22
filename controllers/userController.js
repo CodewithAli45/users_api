@@ -15,6 +15,7 @@ const registerUser = async (req, res) => {
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
+        // const confirmPassword = await bcrypt.hash(confirmPassword, salt);
 
         const newUser = new User({
             fullName, email, phone, address, password: hashedPassword, confirmPassword:hashedPassword
@@ -92,6 +93,48 @@ const getUsers = async (req, res) => {
         })
     }
 }
+
+const deleteUser = async (req, res) => {
+    const {userId} = req.body;
+    try {
+        await User.findByIdAndDelete(userId);
+        res.status(200).json({
+            status: "success",
+            message: "User deleted successfully",
+        })
+    } catch (error) {
+        return res.status(500).json({
+            msg: "failure",
+            Error: "Internal Server Error",
+            erro: error.message
+        })
+    }
+}
+
+const logout = async (req, res) => {
+    const token = req.body.token;
+    if(!token){
+        return res.status(401).json({
+            message: "Authentication failed",
+            status: "fail"
+        })
+    }
+    try {
+        res.clearCookie('jwt');
+
+        res.status(200).json({
+            message: "Logged out successfully",
+            status: "success"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            msg: "failure",
+            Error: "Internal Server Error",
+            erro: error.message
+        })
+    }
+}
+
 
 module.exports = {
     registerUser,
