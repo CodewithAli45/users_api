@@ -4,11 +4,14 @@ const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\
 
 
 const userSchema = new mongoose.Schema({
-    fullName: {type: String, required: true},
+
+    fullName: {type: String,  required: true},
     email: {
         type: String,
         unique: true,
         required: true,
+        trim: true, 
+        lowercase: true,
         validate: {
             validator: function(email){
                 return emailRegex.test(email);
@@ -18,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     address : {type: String},
     phone: {type: String},
-    password: {type: String, required: true},
+    password: {type: String, required: true, minlength: 3},
     confirmPassword: {type: String, required: true},
 
 }, {timeseries: true});

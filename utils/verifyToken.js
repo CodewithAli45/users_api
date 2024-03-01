@@ -1,17 +1,18 @@
 const jwt = require('jsonwebtoken');
-const token_key = process.env.SECRETE_KEY;
 
-const verifyToken = (token) => {
+const verifyToken = (req, res) => {
+    const tokenHeader = req.headers.authorization;
+    if(!tokenHeader){
+        return res.json({
+            msg: "Please provide Token in the Header"
+        })
+    }
     try {
-        const verifyiedToken = jwt.verify(token, token_key);
-        if(!verifyiedToken){
-            return "token invalid or expired"
-        }
-
-        return verifyiedToken;
-
+        const token = tokenHeader.split(' ')[1];
+        const decodedId = jwt.verify(token, process.env.SECRETE_KEY);
+        return decodedId;
     } catch (error) {
-        console.log("token error", error);
+        console.log("Token Error", error);
     }
 }
 
